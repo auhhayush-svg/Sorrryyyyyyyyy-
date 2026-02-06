@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For Afrin ☁️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Coiny', system-ui;
+      height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      transition: background-image 1s ease-in-out;
+      background-size: cover;
+      background-position: center;
+      background-image: url("background.png");
+    }
+
+    .overlay {
+      position: absolute; inset: 0;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(3px);
+      z-index: 1;
+    }
+
+    .chatroom-container {
+      width: 420px;
+      max-width: 92%;
+      height: 85vh;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 40px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+      border: 6px solid #789dbc; 
+      box-shadow: 0 20px 50px rgba(120, 157, 188, 0.4);
+    }
+
+    .chat-header {
+      padding: 18px;
+      background: #789dbc;
+      color: white;
+      text-align: center;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      font-size: 22px;
+    }
+
+    .chat-area {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      gap: 10px;
+    }
+
+    .message-bubble {
+      padding: 14px 20px;
+      border-radius: 25px;
+      max-width: 85%;
+      font-size: 18px;
+      line-height: 1.4;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .sender { 
+      background: #789dbc; 
+      align-self: flex-end; 
+      color: white; 
+      border-bottom-right-radius: 4px;
+      box-shadow: 4px 4px 0px #eef1ff;
+    }
+
+    /* Sticker Specific Styling */
+    .sticker-img {
+      width: 90px;
+      height: 90px;
+      margin: 5px 0;
+      animation: bounce 1.5s infinite ease-in-out;
+    }
+
+    .pos-right { align-self: flex-end; margin-right: 10px; }
+    .pos-left { align-self: flex-start; margin-left: 10px; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+
+    .footer { padding: 20px; text-align: center; position: relative; }
+
+    .next-btn {
+      background: #e493b3;
+      color: white;
+      border: none;
+      padding: 14px 45px;
+      border-radius: 50px;
+      font-family: 'Coiny';
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 5px 0px #c57b98;
+    }
+
+    .next-btn:active { transform: translateY(4px); box-shadow: none; }
+
+    .heart {
+      position: absolute;
+      color: #e493b3;
+      font-size: 20px;
+      pointer-events: none;
+      animation: floatUp 2s linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-120px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="chatroom-container">
+    <div class="chat-header">Ayush ➔ Afrin</div>
+    <div class="chat-area" id="chatArea"></div>
+    <div class="footer" id="footerArea">
+        <button class="next-btn" id="nextBtn" onclick="handleInteraction()">Read Message ✉️</button>
+    </div>
+  </div>
+
+  <script>
+    const chatSteps = [
+      { 
+        text: "Hey Afrin... 💭", 
+        bg: "background.png", 
+        s: "bear1.png", 
+        pos: "pos-right" 
+      },
+      { 
+        text: "Rasmalai is here to apologize.", 
+        bg: "default-cover.png", 
+        s: null 
+      },
+      { 
+        text: "I know I can be a bit of a headache sometimes. 🩹", 
+        bg: "default-cover1.png", 
+        s: "bear2.png", 
+        pos: "pos-left" 
+      },
+      { 
+        text: "But you're my favorite. Can we be okay? ✨", 
+        bg: "background (1).png", 
+        s: null 
+      }
+    ];
+
+    let currentStep = 0;
+
+    function handleInteraction() {
+        spawnHeart();
+        advanceChat();
+    }
+
+    function spawnHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 80 + 10 + '%';
+        document.getElementById('footerArea').appendChild(heart);
+        setTimeout(() => heart.remove(), 2000);
+    }
+
+    function advanceChat() {
+      if (currentStep < chatSteps.length) {
+        const step = chatSteps[currentStep];
+        const chatArea = document.getElementById('chatArea');
+        
+        // 1. Show message
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message-bubble sender`;
+        msgDiv.textContent = step.text;
+        chatArea.appendChild(msgDiv);
+
+        // 2. Show sticker ONLY if it exists for this step
+        if(step.s) {
+            const img = document.createElement('img');
+            img.src = step.s;
+            img.className = `sticker-img ${step.pos}`;
+            chatArea.appendChild(img);
+        }
+
+        document.body.style.backgroundImage = `url('${step.bg}')`;
+        chatArea.scrollTop = chatArea.scrollHeight;
+        
+        currentStep++;
+        
+        if (currentStep === chatSteps.length) {
+            document.getElementById('nextBtn').innerText = "For Afrin ❤️";
+            document.getElementById('nextBtn').onclick = finish;
+        }
+      }
+    }
+
+    function finish() {
+        spawnHeart();
+        const container = document.querySelector('.chatroom-container');
+        container.innerHTML = `
+            <div style="padding:40px; text-align:center; display:flex; flex-direction:column; justify-content:center; height:100%;">
+                <h1 style="color:#e493b3; font-size:38px; margin-bottom:10px;">Yay! 🥰</h1>
+                <img src="121625.jpg" style="width:200px; height:200px; border-radius:30px; margin:15px auto; border:5px solid #e493b3; object-fit:cover;">
+                <p style="color:#789dbc; font-size:20px;">Vibes: Restored.<br>I love you, Afrin!</p>
+                <div style="font-size:50px; margin-top:10px;">🐰🐻🐥</div>
+            </div>
+        `;
+    }
+
+    // Auto-load first message
+    advanceChat();
+  </script>
+</body>
+</html>
+
