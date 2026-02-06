@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -83,21 +83,15 @@
       box-shadow: 4px 4px 0px #eef1ff;
     }
 
-    /* Sticker Specific Styling */
-    .sticker-img {
-      width: 90px;
-      height: 90px;
+    /* GIF Sticker Styling */
+    .sticker-gif {
+      width: 100px; /* Slightly larger for GIFs */
+      height: auto;
       margin: 5px 0;
-      animation: bounce 1.5s infinite ease-in-out;
     }
 
-    .pos-right { align-self: flex-end; margin-right: 10px; }
-    .pos-left { align-self: flex-start; margin-left: 10px; }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0) rotate(-3deg); }
-      50% { transform: translateY(-8px) rotate(3deg); }
-    }
+    .pos-right { align-self: flex-end; margin-right: 15px; }
+    .pos-left { align-self: flex-start; margin-left: 15px; }
 
     .footer { padding: 20px; text-align: center; position: relative; }
 
@@ -145,24 +139,24 @@
       { 
         text: "Hey Afrin... 💭", 
         bg: "background.png", 
-        s: "bear1.png", 
+        gif: "bear1.gif", 
         pos: "pos-right" 
       },
       { 
         text: "Rasmalai is here to apologize.", 
         bg: "default-cover.png", 
-        s: null 
+        gif: null 
       },
       { 
         text: "I know I can be a bit of a headache sometimes. 🩹", 
         bg: "default-cover1.png", 
-        s: "bear2.png", 
+        gif: "bear2.gif", 
         pos: "pos-left" 
       },
       { 
         text: "But you're my favorite. Can we be okay? ✨", 
         bg: "background (1).png", 
-        s: null 
+        gif: null 
       }
     ];
 
@@ -187,17 +181,17 @@
         const step = chatSteps[currentStep];
         const chatArea = document.getElementById('chatArea');
         
-        // 1. Show message
+        // 1. Show message first
         const msgDiv = document.createElement('div');
         msgDiv.className = `message-bubble sender`;
         msgDiv.textContent = step.text;
         chatArea.appendChild(msgDiv);
 
-        // 2. Show sticker ONLY if it exists for this step
-        if(step.s) {
+        // 2. Show GIF ONLY if it exists for this step
+        if(step.gif) {
             const img = document.createElement('img');
-            img.src = step.s;
-            img.className = `sticker-img ${step.pos}`;
+            img.src = step.gif;
+            img.className = `sticker-gif ${step.pos}`;
             chatArea.appendChild(img);
         }
 
@@ -226,9 +220,10 @@
         `;
     }
 
-    // Auto-load first message
     advanceChat();
   </script>
 </body>
 </html>
+
+
 
