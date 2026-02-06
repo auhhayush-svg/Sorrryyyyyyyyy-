@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -40,7 +40,6 @@
       z-index: 10;
       border: 6px solid #789dbc; 
       box-shadow: 0 20px 50px rgba(120, 157, 188, 0.4);
-      transition: all 0.5s ease;
     }
 
     .chat-header {
@@ -84,14 +83,21 @@
       box-shadow: 4px 4px 0px #eef1ff;
     }
 
-    .sticker-gif {
-      width: 100px;
-      height: auto;
+    /* Sticker Specific Styling */
+    .sticker-img {
+      width: 90px;
+      height: 90px;
       margin: 5px 0;
+      animation: bounce 1.5s infinite ease-in-out;
     }
 
-    .pos-right { align-self: flex-end; margin-right: 15px; }
-    .pos-left { align-self: flex-start; margin-left: 15px; }
+    .pos-right { align-self: flex-end; margin-right: 10px; }
+    .pos-left { align-self: flex-start; margin-left: 10px; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
 
     .footer { padding: 20px; text-align: center; position: relative; }
 
@@ -136,10 +142,28 @@
 
   <script>
     const chatSteps = [
-      { text: "Hey Afrin... 💭", bg: "background.png", gif: "bear1.gif", pos: "pos-right" },
-      { text: "Rasmalai is here to apologize.", bg: "default-cover.png", gif: null },
-      { text: "I know I can be a bit of a headache sometimes. 🩹", bg: "default-cover1.png", gif: "bear2.gif", pos: "pos-left" },
-      { text: "But you're my favorite. Can we be okay? ✨", bg: "background (1).png", gif: null }
+      { 
+        text: "Hey Afrin... 💭", 
+        bg: "background.png", 
+        s: "bear1.png", 
+        pos: "pos-right" 
+      },
+      { 
+        text: "Rasmalai is here to apologize.", 
+        bg: "default-cover.png", 
+        s: null 
+      },
+      { 
+        text: "I know I can be a bit of a headache sometimes. 🩹", 
+        bg: "default-cover1.png", 
+        s: "bear2.png", 
+        pos: "pos-left" 
+      },
+      { 
+        text: "But you're my favorite. Can we be okay? ✨", 
+        bg: "background (1).png", 
+        s: null 
+      }
     ];
 
     let currentStep = 0;
@@ -163,15 +187,17 @@
         const step = chatSteps[currentStep];
         const chatArea = document.getElementById('chatArea');
         
+        // 1. Show message
         const msgDiv = document.createElement('div');
         msgDiv.className = `message-bubble sender`;
         msgDiv.textContent = step.text;
         chatArea.appendChild(msgDiv);
 
-        if(step.gif) {
+        // 2. Show sticker ONLY if it exists for this step
+        if(step.s) {
             const img = document.createElement('img');
-            img.src = step.gif;
-            img.className = `sticker-gif ${step.pos}`;
+            img.src = step.s;
+            img.className = `sticker-img ${step.pos}`;
             chatArea.appendChild(img);
         }
 
@@ -190,22 +216,19 @@
     function finish() {
         spawnHeart();
         const container = document.querySelector('.chatroom-container');
-        // Setting the background image for the inner container as well
-        container.style.backgroundImage = "url('background (1).png')";
-        container.style.backgroundSize = "cover";
-        container.style.backgroundPosition = "center";
-        
         container.innerHTML = `
-            <div style="padding:40px; text-align:center; display:flex; flex-direction:column; justify-content:center; height:100%; background: rgba(255,255,255,0.6); border-radius: 34px;">
-                <h1 style="color:#e493b3; font-size:42px; margin-bottom:10px; text-shadow: 2px 2px #fff;">Yay! 🥰</h1>
-                <img src="121625.jpg" style="width:200px; height:200px; border-radius:30px; margin:15px auto; border:5px solid #e493b3; object-fit:cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
-                <p style="color:#2c3e50; font-size:22px; font-weight: bold;">Vibes: Restored.<br>I love you, Afrin!</p>
+            <div style="padding:40px; text-align:center; display:flex; flex-direction:column; justify-content:center; height:100%;">
+                <h1 style="color:#e493b3; font-size:38px; margin-bottom:10px;">Yay! 🥰</h1>
+                <img src="121625.jpg" style="width:200px; height:200px; border-radius:30px; margin:15px auto; border:5px solid #e493b3; object-fit:cover;">
+                <p style="color:#789dbc; font-size:20px;">Vibes: Restored.<br>I love you, Afrin!</p>
                 <div style="font-size:50px; margin-top:10px;">🐰🐻🐥</div>
             </div>
         `;
     }
 
+    // Auto-load first message
     advanceChat();
   </script>
 </body>
 </html>
+
